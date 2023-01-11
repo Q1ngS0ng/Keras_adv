@@ -21,7 +21,7 @@ def pgd_attack(lpr_model, image, epsilons = 0.05, iter = 10):
 
         adv_result = np.argmax(attack_res, axis=1)
         if adv_result[0] != ret_predict[0]:
-            print("attack sucess!")
+            # print("attack sucess!")
             break
     del ret_predict, label, image, adv_result
     return attack_res, img_attack

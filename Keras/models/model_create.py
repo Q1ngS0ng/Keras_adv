@@ -1,5 +1,5 @@
 import keras
-from keras.layers import Dense, Flatten, Input, MaxPool2D, concatenate, Conv2D
+from keras.layers import Dense, Flatten, Input, MaxPool2D, concatenate, Conv2D, LSTM, Reshape
 from keras.datasets import mnist
 import tensorflow as tf
 from keras.utils import plot_model
@@ -54,10 +54,26 @@ def train_model(model):
     model.fit(x_train, y_train, epochs=5)
     return model
 
+
+def rnn():
+    input_ = Input(shape=(28, 28, 1,))
+
+    x = Reshape((28, 28))(input_)
+    x = LSTM(100)(x)
+    x = Dense(100)(x)
+    output = Dense(10, activation='softmax')(x)
+
+    model = keras.Model(inputs=[input_], outputs=[output])
+    model.compile(loss=keras.losses.categorical_crossentropy,
+                  optimizer=keras.optimizers.Adadelta(),
+                  metrics=['accuracy'])
+
+    return model
+
 if __name__ == "__main__":
-    model = keras_Net()
+    model = rnn()
     model = train_model(model)
-    model.save("lenet_mnist.h5")
+    model.save("rnn.h5")
     # model = keras.models.load_model("lenet_mnist.h5")
     plot_model(model, show_shapes=True,
-               to_file=('lenet_mnist.png'))
+               to_file=('rnn.png'))

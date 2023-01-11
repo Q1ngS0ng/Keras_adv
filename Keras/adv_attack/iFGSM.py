@@ -13,7 +13,7 @@ def i_fgsm_attack(lpr_model, image, epsilons = 0.05):
     label = np.zeros([1, 10])
     label[:, ret_predict] = 1 # 视原始结果为正确结果
     img_attack = image #img_convert
-    for i in range(10):
+    for i in range(5):
         img_attack = fgsm(lpr_model, img_attack, label, eps=epsilons)
         img_attack = img_attack[0]
         attack_res = lpr_model.predict(np.array([img_attack]))
