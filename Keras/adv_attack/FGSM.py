@@ -1,11 +1,12 @@
 import numpy as np
-import keras
+# from tensorflow import keras
+import tensorflow.python.keras as keras
 import tensorflow as tf
-from keras.datasets import mnist
+from tensorflow.python.keras.datasets import mnist
 
 tf.compat.v1.disable_eager_execution()
 
-from .utils import fgsm, pgd
+from .utils import fgsm
 
 def fgsm_attack(lpr_model, image, epsilons = 0.05):
     ret_predict = lpr_model.predict(np.array([image]))

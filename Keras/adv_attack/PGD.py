@@ -1,12 +1,9 @@
 import numpy as np
-import keras
 import tensorflow as tf
-from keras.datasets import mnist
 
 tf.compat.v1.disable_eager_execution()
-
 from .utils import pgd
-
+import gc
 def pgd_attack(lpr_model, image, epsilons = 0.05, iter = 10):
     ret_predict = lpr_model.predict(np.array([image]))
     ret_predict = np.argmax(ret_predict, axis=1) #进行预测 np.argmax(model.predict(testX), axis=1)
@@ -24,21 +21,5 @@ def pgd_attack(lpr_model, image, epsilons = 0.05, iter = 10):
             # print("attack sucess!")
             break
     del ret_predict, label, image, adv_result
+    gc.collect()
     return attack_res, img_attack
-
-if __name__ == "__main__":
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    x_train, x_test = x_train / 255.0, x_test / 255.0
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-    x_train = x_train.astype('float32')
-    x_train /= 255
-    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-    x_test = x_test.astype('float32')
-    x_test /= 255
-    lenet_minist_path = "../models/lenet_mnist.h5"
-    model = keras.models.load_model(lenet_minist_path)
-
-    res_attack, img_attack = pgd_attack(model, x_train[0], epsilons = 0.05)
-
-    print("对抗样本标签为："+str(np.argmax(res_attack, axis=1)[0]))
-    print("原始样本标签为："+str(y_train[0]))

@@ -1,8 +1,8 @@
-import keras
-from keras.layers import Dense, Flatten, Input, MaxPool2D, concatenate, Conv2D, LSTM, Reshape
-from keras.datasets import mnist
+from tensorflow.python import keras
+from tensorflow.python.keras.layers import Dense, Flatten, Input, MaxPool2D, concatenate, Conv2D, LSTM, Reshape
+from tensorflow.python.keras.datasets import mnist
 import tensorflow as tf
-from keras.utils import plot_model
+# from tensorflow.keras.utils import plot_model
 
 
 def data_loader(dataset = 'mnist'):
@@ -44,7 +44,7 @@ def train_model(model):
     predictions = model(x_train[:1]).numpy()
     tf.nn.softmax(predictions).numpy()
 
-    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     loss_fn(y_train[:1], predictions).numpy()
 
     model.compile(optimizer='adam',
@@ -59,21 +59,21 @@ def rnn():
     input_ = Input(shape=(28, 28, 1,))
 
     x = Reshape((28, 28))(input_)
-    x = LSTM(100)(x)
+    x = LSTM(100, recurrent_activation = 'sigmoid')(x)
     x = Dense(100)(x)
     output = Dense(10, activation='softmax')(x)
 
     model = keras.Model(inputs=[input_], outputs=[output])
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer=keras.optimizers.Adadelta(),
+                  optimizer='adam',
                   metrics=['accuracy'])
 
     return model
 
 if __name__ == "__main__":
+
     model = rnn()
     model = train_model(model)
     model.save("rnn.h5")
     # model = keras.models.load_model("lenet_mnist.h5")
-    plot_model(model, show_shapes=True,
-               to_file=('rnn.png'))
+#    plot_model(model, show_shapes=True, to_file=('rnn.png'))

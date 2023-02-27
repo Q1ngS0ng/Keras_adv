@@ -1,4 +1,7 @@
-from Keras.keras_config import *
+from keras import losses, backend
+import numpy as np
+import tensorflow as tf
+lenet_minist_path = "../models/lenet_mnist.h5"
 tf.compat.v1.disable_eager_execution()
 
 def fgsm(model, input, y_true, eps=0.05):

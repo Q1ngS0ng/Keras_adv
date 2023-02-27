@@ -1,7 +1,8 @@
 import numpy as np
-import keras
+# from tensorflow import keras
+import tensorflow.python.keras as keras
 import tensorflow as tf
-from keras.datasets import mnist
+from tensorflow.python.keras.datasets import mnist
 
 tf.compat.v1.disable_eager_execution()
 from .utils import fgsm
@@ -13,7 +14,7 @@ def i_fgsm_attack(lpr_model, image, epsilons = 0.05):
     label = np.zeros([1, 10])
     label[:, ret_predict] = 1 # 视原始结果为正确结果
     img_attack = image #img_convert
-    for i in range(5):
+    for i in range(3):
         img_attack = fgsm(lpr_model, img_attack, label, eps=epsilons)
         img_attack = img_attack[0]
         attack_res = lpr_model.predict(np.array([img_attack]))
